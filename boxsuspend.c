@@ -43,7 +43,6 @@
 #define error(msg) { printf("ERROR: %s\n",msg); exit(1);}
 
 
-void commitChange();
 void usage();
 
 int

@@ -1,4 +1,4 @@
-//      xbright.c
+//      boxsuspend.c
 //
 //      Copyright 2011 Alex Kozadaev <akozadaev at yahoo dot com>
 //

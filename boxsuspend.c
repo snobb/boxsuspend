@@ -42,12 +42,11 @@
 #define DISK		"disk"
 #define error(msg) { printf("ERROR: %s\n",msg); exit(1);}
 
+#define PARAMS { "/usr/bin/xautolock", "-locknow", NULL }
 
-
-const char *params[] = { "/usr/bin/xautolock", "-locknow", NULL };
 
 void usage();
-void locknow();
+void locknow(const char **);
 
 int
 main(int argc, char *argv[])
@@ -69,7 +68,8 @@ main(int argc, char *argv[])
 		} 
 	}	
 
-	locknow();
+	const char *params[] = PARAMS;
+	locknow((const char **)params);
 	sleep(1);
 
 	FILE* output = fopen(SUSPENDFILE, "w");
@@ -86,7 +86,7 @@ main(int argc, char *argv[])
 }
 
 void
-locknow() {
+locknow(const char **params) {
 	if (fork() == 0) {
 		setsid();
 		execv(params[0], (char**)params);

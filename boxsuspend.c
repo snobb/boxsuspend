@@ -43,7 +43,11 @@
 #define error(msg) { printf("ERROR: %s\n",msg); exit(1);}
 
 
+
+const char *params[] = { "/usr/bin/xautolock", "-locknow", NULL };
+
 void usage();
+void locknow();
 
 int
 main(int argc, char *argv[])
@@ -65,6 +69,9 @@ main(int argc, char *argv[])
 		} 
 	}	
 
+	locknow();
+	sleep(1);
+
 	FILE* output = fopen(SUSPENDFILE, "w");
 	if (output == NULL)
 		error("Cannot open kernel pipe");
@@ -76,6 +83,15 @@ main(int argc, char *argv[])
 #endif
 	fclose(output);
 	return 0;
+}
+
+void
+locknow() {
+	if (fork() == 0) {
+		setsid();
+		execv(params[0], (char**)params);
+		exit(0);
+	}
 }
 
 void

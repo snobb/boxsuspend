@@ -43,15 +43,18 @@
 #define error(msg) { printf("ERROR: %s\n",msg); exit(1);}
 
 #define PARAMS { "/usr/bin/xautolock", "-locknow", NULL }
+#define XRANDR { "/bin/sh", "/usr/local/bin/xrandr.sh", NULL }
 
 
 void usage();
-void locknow(const char **);
+void spawn(const char **);
 
 int
 main(int argc, char *argv[])
 {
 	char value[4] = MEM;
+	const char *params[] = PARAMS;
+	const char *xrandr[] = XRANDR;
 
 	if (geteuid()) {
 		usage();
@@ -68,8 +71,7 @@ main(int argc, char *argv[])
 		} 
 	}	
 
-	const char *params[] = PARAMS;
-	locknow((const char **)params);
+	spawn(params);
 	sleep(1);
 
 	FILE* output = fopen(SUSPENDFILE, "w");
@@ -82,11 +84,15 @@ main(int argc, char *argv[])
 	printf("Current value: %s\n", value);
 #endif
 	fclose(output);
+
+	sleep(3);
+	spawn(xrandr);
+
 	return 0;
 }
 
 void
-locknow(const char **params) {
+spawn(const char **params) {
 	if (fork() == 0) {
 		setsid();
 		execv(params[0], (char**)params);

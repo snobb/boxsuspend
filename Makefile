@@ -22,15 +22,13 @@ debug: build
 
 release: CFLAGS += -Os
 release: LFLAGS += 
-release: clean build strip
+release: clean build
+	$(STRIP) $(TARGET)
 
 build: build_host.h $(TARGET)
 
 $(TARGET): build_host.h $(OBJECTS)
 	$(LINK) $(LFLAGS) -o $(TARGET) $(OBJECTS) $(LIBPATH) $(LIBS)
-
-strip:
-	$(STRIP) $(TARGET)
 
 .c.o: $*.h common.h
 	$(CC) -c $(CFLAGS) $(DEBUGFLAGS) $(INCPATH) -o $@ $<
@@ -59,4 +57,4 @@ clean:
 	-rm -f $(TARGET)
 	-rm -f build_host.h
 
-.PHONY : all debug release build clean strip install uninstall
+.PHONY : all debug release build clean install uninstall

@@ -54,7 +54,7 @@ int
 main(int argc, char *argv[])
 {
 	FILE *output = NULL;
-	char value[4] = MEM;
+	char value[10] = MEM;
 	const char *params[] = PARAMS;
 	const char *xrandr[] = XRANDR;
 

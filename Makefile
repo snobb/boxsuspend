@@ -8,7 +8,7 @@ CFLAGS = -ansi -pedantic
 LFLAGS = 
 STRIP = strip
 INSTALL = install
-INSTALL_ARGS = -o root -g wheel -m 4755  # Installs with SUID set
+INSTALL_ARGS = -o root -g root -m 4755  # Installs with SUID set
 INSTALL_DIR = /usr/local/bin/
 
 # Autoconfiguration

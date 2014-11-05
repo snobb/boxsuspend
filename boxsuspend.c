@@ -46,7 +46,10 @@
 
 
 void usage();
+
+#if defined(HASLOCK) || defined(HASXRANDR)
 void spawn(const char **);
+#endif  /* HASLOCK || HASXRANDR */
 
 int
 main(int argc, char *argv[])
@@ -68,7 +71,7 @@ main(int argc, char *argv[])
         error("Must be root");
         return 1;
     }
-#endif
+#endif  /* !DEBUG */
 
     if (argc > 1) {
         if (*argv[1]++ == '-') {
@@ -84,27 +87,28 @@ main(int argc, char *argv[])
 #ifdef HASLOCK
     spawn(lock);
     sleep(1);
+#endif  /* LOCK */
 
-    output = fopen(SUSPENDFILE, "w");
+    output = fopen(SUSPENDFILE, "w+");
     if (output == NULL)
         error("Cannot open kernel pipe");
 
-    fprintf(output, "%s", value);
+    fprintf(output, "%s\n", value);
     fclose(output);
-#endif  /* LOCK */
 
 #ifdef HASXRANDR
     sleep(5);
     spawn(xrandr);
 #endif  /* XRANDR */
 
-#else
+#else   /* !DEBUG */
     printf("Current value: %s\n", value);
-#endif
+#endif  /* !DEBUG */
 
     return 0;
 }
 
+#if defined(HASLOCK) || defined(HASXRANDR)
 void
 spawn(const char **params) {
     if (fork() == 0) {
@@ -113,14 +117,15 @@ spawn(const char **params) {
         exit(0);
     }
 }
+#endif  /* HASLOCK || HASXRANDR */
 
 void
 usage()
 {
     puts(NAME " v" VERSION " Alex Kozadaev (c) [" BUILD_KERNEL "]\n"
-         "" NAME " [-d] [-h]\n"
-         "\t-d - hybernate (default - suspend to memory)"
-         "\t-h - help (this output)");
+         NAME " [-d] [-h]\n"
+         "\t-d - hybernate (default - suspend to memory)\n"
+         "\t-h - help (this output)\n");
 }
 
 /* vim: ts=4 sts=8 sw=4 smarttab et si tw=80 ci cino+=t0(0:0 fo=crtocl list */
